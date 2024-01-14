@@ -20,7 +20,7 @@ const upload = multer({ storage: multer.memoryStorage() });
 
 app.use(cors());
 
-app.post('/upload', upload.array('file'), async (req, res) => {
+app.post('/upload', upload.array('files'), async (req, res) => {
     try {
         const credentials = JSON.parse(process.env.KEY);
         const auth = new google.auth.GoogleAuth({
