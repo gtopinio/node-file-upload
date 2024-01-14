@@ -42,7 +42,7 @@ app.post('/upload', upload.array('files'), async (req, res) => {
                 },
                 media: {
                     mimeType: file.mimetype,
-                    body: Buffer.from(file.buffer).toString()
+                    body: Buffer.from(file.buffer)
                 }
             });
 
