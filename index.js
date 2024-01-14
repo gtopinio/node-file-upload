@@ -6,6 +6,7 @@ const fs = require('fs');
 const path = require('path');
 const cors = require('cors');
 const app = express();
+const { Readable } = require('stream');
 
 
 const storage = multer.diskStorage({
@@ -34,6 +35,9 @@ app.post('/upload', upload.array('files'), async (req, res) => {
 
         for(let i = 0; i < req.files.length; i++) {
             const file = req.files[i];
+            const bufferStream = new Readable();
+            bufferStream.push(file.buffer);
+            bufferStream.push(null);
             const response = await drive.files.create({
                 requestBody: {
                     name: file.originalname,
@@ -42,7 +46,7 @@ app.post('/upload', upload.array('files'), async (req, res) => {
                 },
                 media: {
                     mimeType: file.mimetype,
-                    body: Buffer.from(file.buffer)
+                    body: bufferStream
                 }
             });
 
