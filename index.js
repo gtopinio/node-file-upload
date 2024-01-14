@@ -16,7 +16,7 @@ const storage = multer.diskStorage({
     }
 });
 
-const upload = multer({ storage: storage });
+const upload = multer({ storage: multer.memoryStorage() });
 
 app.use(cors());
 
@@ -41,14 +41,15 @@ app.post('/upload', upload.array('file'), async (req, res) => {
                     parents: ['1sNvvMcNTsS-XlAzWmmmR_LsRN42Vw6oY']
                 },
                 media: {
-                    body: fs.createReadStream(file.path)
+                    mimeType: file.mimetype,
+                    body: Buffer.from(file.buffer).toString()
                 }
             });
 
             uploadedFiles.push(response.data);
         }
 
-        res.send({files:uploadedFiles});
+        res.send({files:uploadedFiles}); // automatically sends a 200 status code
 
     } catch (err) {
         console.log(err);
